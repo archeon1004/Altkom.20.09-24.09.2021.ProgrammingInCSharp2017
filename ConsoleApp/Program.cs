@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,6 @@ namespace ConsoleApp
 {
     class Program
     {
-        Entity entity;
-
-
-        int _myData;
-
         static void Increment(int param)
         {
             //param = param + 1;
@@ -38,14 +34,23 @@ namespace ConsoleApp
         //TODO Correct
         static void Main(string[] args)
         {
-            int x = 15;
-            Increment(x);
+            Mod2();
+            Mod1();
+        }
 
-            var person = new Person();
-            person.EditPerson();
+        private static void Mod2()
+        {
+            string value = "4e4";
+            var myService = new Service();
+            TryCatch(value, myService);
 
-            EditPerson(ref person);
-            
+            int intValue = OutParameters(value);
+            DefaultParameters(myService);
+            ValueTypes();
+        }
+
+        private static void Mod1()
+        {
             Console.WriteLine("Hello World!");
             ServiceReference.Service1Client service = Method1();
             NewMethod2(service);
@@ -94,7 +99,82 @@ namespace ConsoleApp
 
 
             } while (key != 'f');
+        }
 
+        private static void TryCatch(string value, Service myService)
+        {
+            try
+            {
+                ExecuteService(value, myService);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+
+                if (!EventLog.SourceExists("Szkolenie 20483"))
+                    EventLog.CreateEventSource("Szkolenie 20483", "ConsoleApp");
+
+                EventLog.WriteEntry("Szkolenie 20483", e.Message);
+            }
+        }
+
+        private static int OutParameters(string value)
+        {
+            int intValue;
+            bool result = int.TryParse(value, out intValue);
+            if (result)
+            {
+                Console.WriteLine($"int = {intValue}");
+            }
+
+            if (int.TryParse(value, out var myValue))
+            {
+                Console.WriteLine($"int = {myValue}");
+            }
+
+            return intValue;
+        }
+
+        private static void DefaultParameters(Service myService)
+        {
+            myService.StopService("serviceName", 5);
+            myService.StopService("name", port: 433);
+        }
+
+        private static void ValueTypes()
+        {
+            int x = 15;
+            Increment(x);
+
+            var person = new Person();
+            person.EditPerson();
+
+            EditPerson(ref person);
+        }
+
+        private static void ExecuteService(string value, Service myService)
+        {
+            try
+            {
+                var intValue = int.Parse(value);
+                if (myService.CompareData(intValue) == false)
+                {
+                    throw new Exception("Data not compatible");
+                }
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("FormatException " + e.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception " + e.Message);
+            }
+            finally
+            {
+                myService.StopService();
+            }
         }
 
         private static void NewMethod2(ServiceReference.Service1Client service)
