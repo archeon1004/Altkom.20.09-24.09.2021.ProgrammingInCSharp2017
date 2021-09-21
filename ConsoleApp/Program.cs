@@ -14,9 +14,38 @@ namespace ConsoleApp
 
         int _myData;
 
+        static void Increment(int param)
+        {
+            //param = param + 1;
+            param++;
+        }
+
+        struct Person
+        {
+            public string Name { get; set; }
+
+            public void EditPerson()
+            {
+                Name = "Anna";
+            }
+        }
+
+        static void EditPerson(ref Person person)
+        {
+            person.Name = "Ewa";
+        }
+
         //TODO Correct
         static void Main(string[] args)
         {
+            int x = 15;
+            Increment(x);
+
+            var person = new Person();
+            person.EditPerson();
+
+            EditPerson(ref person);
+            
             Console.WriteLine("Hello World!");
             ServiceReference.Service1Client service = Method1();
             NewMethod2(service);
