@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Models.Extensions;
 
 namespace ConsoleApp
 {
@@ -18,6 +19,8 @@ namespace ConsoleApp
 
             Tea tea = new Tea();
             beverage = tea;
+
+            coffee1.IsServingTemperatureHigherThan(true, 100);
 
 
 
