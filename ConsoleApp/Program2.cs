@@ -13,6 +13,13 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            Coffee coffee1 = new Coffee();
+            IBeverage beverage = coffee1;
+
+            Tea tea = new Tea();
+            beverage = tea;
+
+
 
             var people = new Person[2];
 
@@ -36,6 +43,24 @@ namespace ConsoleApp
             prices.Add("English Tea", 1.69M);
             prices.Add("Juice", 2.89M);
 
+            IDictionary<string, decimal> pricesDictionary = new Dictionary<string, decimal>();
+            pricesDictionary.Add("Café au Lait", 1.99M);
+            pricesDictionary.Add("Caffe Americano", 1.89M);
+            pricesDictionary.Add("Café Mocha", 2.99M);
+            pricesDictionary.Add("Cappuccino", 2.49M);
+            pricesDictionary.Add("Espresso", 1.49M);
+            pricesDictionary.Add("Espresso Romano", 1.59M);
+            pricesDictionary.Add("English Tea", 1.69M);
+            pricesDictionary.Add("Juice", 2.89M);
+
+            var enumerator = pricesDictionary.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                Console.WriteLine(enumerator.Current.Key);
+            }
+
+            foreach(var item in pricesDictionary)
+                Console.WriteLine(item.Key);
 
 
             SomeDelegate someDelegate = null;
@@ -45,7 +70,7 @@ namespace ConsoleApp
             if(someDelegate != null)
                 someDelegate(prices);
 
-            DoSth(FindDrinksUnsorted, prices);
+            DoSth(FindDrinksUnsortedYield, prices);
 
 
             var service = new Service();
@@ -67,7 +92,7 @@ namespace ConsoleApp
 
         public static void DoSth(SomeDelegate someDelegate, Hashtable prices)
         {
-            someDelegate(prices);
+            var items = someDelegate(prices);
         }
 
         private static IEnumerable FindDrinksUnsorted(Hashtable prices)
@@ -80,6 +105,16 @@ namespace ConsoleApp
             }
             return drinks2;
         }
+
+        private static IEnumerable FindDrinksUnsortedYield(Hashtable prices)
+        {
+            foreach (string drink in prices.Keys)
+            {
+                if ((Decimal)prices[drink] < 2.00M)
+                    yield return drink;
+            }
+        }
+
         private static IEnumerable FindDrinks(Hashtable prices)
         {
             return from string drink in prices.Keys
@@ -88,5 +123,9 @@ namespace ConsoleApp
                          select drink;
         }
 
+        public void Main2()
+        {
+
+        }
     }
 }
