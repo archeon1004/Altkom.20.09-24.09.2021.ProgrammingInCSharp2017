@@ -17,6 +17,10 @@ namespace ConsoleApp
 
         //}
 
+        public delegate void ServiceStopped(string name);
+
+        public event ServiceStopped ServiceStoppedEvent;
+
             public bool CompareData(int param)
         {
             return new Random().Next() == param;
@@ -29,7 +33,8 @@ namespace ConsoleApp
 
         public void StopService(string name, int delay = 1000)
         {
-
+            if (ServiceStoppedEvent != null)
+                ServiceStoppedEvent(name);
         }
 
         public void StopService(string name, int delay = 1000, int port = 5000, int id = 1)

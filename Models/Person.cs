@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    struct Person
+    public struct Person
     {
         private string _firstname;
 
@@ -21,7 +21,38 @@ namespace Models
 
         }
 
-
         public string LastName { private get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        public string this[int index]
+        {
+            get {
+                switch (index) {
+                    case 0:
+                        return GetFirstName();
+                    case 1:
+                        return LastName;
+                    case 2:
+                        return BirthDate.ToString();
+                    default:
+                        return null;
+                };
+            }
+            set {
+                switch (index)
+                {
+                    case 0:
+                        SetFirstName(value);
+                        break;
+                    case 1:
+                        LastName = value;
+                        break;
+                    case 2:
+                        BirthDate =  DateTime.Parse(value);
+                        break;
+                };
+            }
+        }
     }
 }
