@@ -5,17 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <StackPanel>
-        <Button x:Name="buttonHello">
-            <StackPanel>
-                <Button></Button>
-                <Button></Button>
-                <Button></Button>
-                <Button></Button>
-                <Button></Button>
-            </StackPanel>
-        </Button>
-        <Button x:Name="buttonHello1" Content="{Binding Hello}" Height="199" Width="150"/>
-    </StackPanel>
+        Title="MainWindow"
+        Height="500"
+        Width="500">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MyBrush"
+                         Color="Red" />
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                    <Setter Property="Foreground"
+                            Value="White" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Label"
+               x:Key="RotateLabel">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <RotateTransform Angle="0" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Label.MouseDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                             From="0"
+                                             To="360"
+                                             Duration="0:0:2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                    </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <local:CoffeeControl Grid.Column="0"
+                             OrderPlaced="CoffeeControl_OrderPlaced" />
+        <ListView Grid.Column="1"
+                  ItemsSource="{Binding Orders}"
+                  HorizontalContentAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label DockPanel.Dock="Top"
+                               Style="{StaticResource RotateLabel}"
+                               Content="{Binding DateTime}"
+                               Background="{StaticResource MyBrush}"/>
+                        <Button DockPanel.Dock="Right"
+                                Click="Delete_Click"
+                                Foreground="{StaticResource MyBrush}">Delete</Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Beverage}" />
+                            <Label Content="{Binding Milk}" />
+                            <Label Content="{Binding Sugar}" />
+                        </StackPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </Window>
